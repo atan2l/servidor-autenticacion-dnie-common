@@ -1,0 +1,13 @@
+[package]
+name = "servidor-autenticacion-dnie-common"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+oxide-auth = "0.6.1"
+oxide-auth-async = "0.2.1"
+uuid = { version = "1.18.1", features = ["serde"] }
+diesel = { version = "2.3", features = ["uuid", "postgres"] }
+diesel-async = { version = "0.7", features = ["bb8", "pool", "postgres"] }
+async-trait = "0.1.89"
+argon2 = "0.5.3"
