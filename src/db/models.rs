@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use diesel::{Associations, Identifiable, Insertable, Queryable, Selectable};
 use uuid::Uuid;
 
@@ -29,4 +30,28 @@ pub struct AuthClientRedirectUri {
     pub id: Uuid,
     pub client_id: Uuid,
     pub uri: String,
+}
+
+#[derive(Debug, Queryable, Identifiable, Selectable, Insertable, PartialEq)]
+#[diesel(primary_key(code_hash))]
+#[diesel(table_name = crate::db::schema::oauth_grants)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct OAuthGrant {
+    pub code_hash: String,
+    pub client_id: Uuid,
+    pub owner_id: Uuid,
+    pub redirect_uri: String,
+    pub scope: String,
+    pub until: DateTime<Utc>,
+}
+
+#[derive(Debug, Queryable, Identifiable, Selectable, Insertable, Associations, PartialEq)]
+#[diesel(primary_key(code_hash, name))]
+#[diesel(table_name = crate::db::schema::oauth_grant_extensions)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+#[diesel(belongs_to(OAuthGrant, foreign_key = code_hash))]
+pub struct OAuthGrantExtension {
+    pub code_hash: String,
+    pub name: String,
+    pub value: String,
 }
